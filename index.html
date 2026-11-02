@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Risk Perception at Height</title>
+<meta name="description" content="Same hazard, different risk perceptions: working at height. MAC Roofing &amp; Contracting Ltd.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Michroma&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1a33; --bg2:#12284a; --ink:#ffffff; --mute:#a9b7cb; --line:#26426d;
+  --acc:#8fb4e3; --mac:#2b5083; --hazard:#ff4d3d;
+  --a:#3b8cff; --b:#22c55e; --c:#ff5a4f; --d:#b06cff;
+  --head:'Barlow Condensed','Arial Narrow',Arial,sans-serif;
+  --body:Inter,'Segoe UI',Arial,sans-serif;
+  --glass:rgba(9,22,44,.66);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--ink);font-family:var(--body);overflow:hidden}
+body{-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+
+/* ---------- full-bleed backdrops: real footage behind every chapter ---------- */
+.bd{position:fixed;inset:0;z-index:0;opacity:0;transition:opacity 1.4s ease}
+.bd.on{opacity:1}
+.bd img,.bd video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.bd img{animation:drift 30s ease-in-out infinite alternate}
+@keyframes drift{from{transform:scale(1.04) translate(0,0)}to{transform:scale(1.12) translate(-1.5%,-1%)}}
+.bd::after{content:"";position:absolute;inset:0;background:var(--shade)}
+#gl{position:fixed;inset:0;z-index:1;width:100vw;height:100vh;display:none}
+body.three #gl{display:block}
+
+/* ---------- chapters ---------- */
+.slide{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:center;padding:13vh 6vw 13vh;
+  opacity:0;visibility:hidden;transition:opacity .9s ease,visibility .9s;pointer-events:none}
+.slide.on{opacity:1;visibility:visible}
+.slide.on *{pointer-events:auto}
+.kicker{font:600 clamp(15px,1.35vw,22px) var(--head);letter-spacing:.34em;text-transform:uppercase;color:var(--acc)}
+h1,h2{font-family:var(--head);font-weight:800;text-transform:uppercase;line-height:.9;letter-spacing:.005em;text-shadow:0 4px 40px rgba(0,0,0,.5)}
+h1{font-size:clamp(56px,8.4vw,156px)}
+h2{font-size:clamp(38px,4.6vw,84px);margin:.18em 0 .3em}
+.rise{opacity:0;transform:translateY(26px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.slide.on .rise{opacity:1;transform:none}
+.slide.on .d1{transition-delay:.2s}.slide.on .d2{transition-delay:.45s}.slide.on .d3{transition-delay:.7s}.slide.on .d4{transition-delay:1s}
+.glass{background:var(--glass);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);border:1px solid rgba(143,180,227,.16)}
+
+/* 1 · title */
+#s1{justify-content:flex-end}
+#s1 h1>span{display:block}
+#s1 h1 .hl{color:var(--acc)}
+#s1 .rise{max-width:54vw}
+.ipanel{position:absolute;top:0;right:0;bottom:0;width:40vw;padding:0 4vw;display:flex;flex-direction:column;justify-content:center;gap:2.4vh;
+  background:rgba(8,19,38,.78);border-left:6px solid var(--acc);border-top:0;border-bottom:0;border-right:0;
+  transform:translateX(102%);transition:transform 1.1s var(--ease)}
+#s1.ready .ipanel{transform:none}
+.il{font:800 clamp(44px,4.6vw,92px)/.98 var(--head);text-transform:uppercase;opacity:0;transform:translateX(40px);transition:opacity .8s,transform .9s var(--ease)}
+.il.big{font-size:clamp(52px,5.4vw,108px)}
+.il em{font-style:normal;color:var(--acc)}
+#s1.ready .il,#s1.ready .dots4{opacity:1;transform:none;transition-delay:calc(var(--dl) + .5s)}
+.dots4{display:flex;gap:1vw;margin-top:2vh;opacity:0;transform:translateX(40px);transition:opacity .8s,transform .9s var(--ease)}
+.dots4 i{font:800 clamp(34px,3vw,58px)/1 var(--head);font-style:normal;color:var(--k);width:1.5em;height:1.5em;display:grid;place-items:center;border:3px solid var(--k);border-radius:50%}
+#bd-s1 .op{opacity:0;transition:opacity 1s ease}
+#bd-s1 .op.show{opacity:1}
+#s1:not(.ready) .rise{opacity:0!important;transform:translateY(26px)!important}
+#s1.ready .d1{transition-delay:.3s}#s1.ready .d2{transition-delay:.7s}
+
+/* the whiteboard box (SVG) */
+.box svg{width:100%;height:100%;overflow:visible;display:block}
+.box .edge{fill:none;stroke:#eef3fa;stroke-width:3.4;stroke-linejoin:round;stroke-linecap:round}
+.box .hidden{stroke-dasharray:10 10;opacity:.4}
+.box .face{fill:var(--k,#fff);fill-opacity:0;transition:fill-opacity .8s ease}
+.box .face.lit{fill-opacity:.3}
+.box .face.hot{fill-opacity:.65}
+.box .hz{font:800 66px var(--head);fill:var(--hazard);letter-spacing:2px}
+.box .hzs{font:600 21px var(--head);fill:#fff;letter-spacing:5px}
+.draw .lines .edge:not(.hidden){stroke-dasharray:var(--len);stroke-dashoffset:var(--len);transition:stroke-dashoffset 1.8s var(--ease)}
+.slide.on .draw .lines .edge:not(.hidden){stroke-dashoffset:0}
+
+.box .lbl{opacity:0;transition:opacity .8s .9s}
+.slide.on .box .lbl{opacity:1}
+
+.arm{opacity:0;transition:opacity .6s ease}
+#s2 .arm[data-k=A]{--ad:.5s}#s2 .arm[data-k=B]{--ad:1.1s}#s2 .arm[data-k=C]{--ad:1.7s}#s2 .arm[data-k=D]{--ad:2.3s}
+#s2 .arm.in{transition-delay:var(--ad,0s)}#s2 .arm.in .shaft{transition-delay:var(--ad,0s)}
+#s2 .face[data-face=A]{--ad:1.1s}#s2 .face[data-face=B]{--ad:1.7s}#s2 .face[data-face=C]{--ad:2.3s}#s2 .face[data-face=D]{--ad:2.9s}
+#s2 .face.lit{transition-delay:var(--ad,0s)}body.worker #s2 .face{transition-delay:0s!important}body.worker #s2 .arm{transition-delay:0s!important}
+.arm.in{opacity:1}
+.arm.dim{opacity:.2}
+.arm .shaft{stroke:var(--k);stroke-width:6;stroke-linecap:round;stroke-dasharray:260;stroke-dashoffset:260;transition:stroke-dashoffset .9s var(--ease)}
+.arm.in .shaft{stroke-dashoffset:0}
+.arm .head{fill:var(--k);opacity:0;transition:opacity .3s .7s}
+.arm.in .head{opacity:1}
+.arm .who{font:800 80px var(--head);fill:var(--k)}
+.arm .risk{font:600 19px var(--head);fill:var(--k);letter-spacing:6px}
+.arm .run{fill:#fff;opacity:.85}
+#s2 .arm.in{cursor:pointer}
+
+/* 2 · the model */
+#s2{justify-content:flex-start}
+#s2 .top{text-align:center;transition:opacity .6s}
+#s2 .stage{position:absolute;left:50%;top:50.5%;width:min(52vw,76vh);aspect-ratio:10/7;transform:translate(-50%,-50%);transition:left 1s var(--ease),width 1s var(--ease)}
+body.worker #s2 .stage{left:23%;top:48%;width:min(44vw,76vh)}
+#ctl{transition:left .8s var(--ease)}
+body.worker #ctl{left:23%}
+#s2 .caption{position:absolute;left:50%;bottom:12.5vh;transform:translateX(-50%);width:min(980px,88vw);padding:1.5vh 2vw;border-radius:10px;text-align:center;
+  font-size:clamp(18px,1.6vw,28px);line-height:1.4;color:#eef2f7;opacity:0;transition:opacity .8s}
+#s2.on .caption{opacity:1;transition-delay:3.4s}
+body.worker #s2 .caption,body.worker #s2 .top{opacity:0!important}
+body.three #s2 .stage{visibility:hidden}
+body.three #s2 .caption{left:auto;right:3vw;transform:none;width:min(440px,27vw);bottom:15vh;text-align:left}
+.panel{position:fixed;top:0;right:0;bottom:0;width:min(900px,54vw);z-index:5;
+  background:rgba(8,19,38,.92);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-left:6px solid var(--k);
+  padding:0 2.4vw 13vh;transform:translateX(105%);transition:transform .8s var(--ease);overflow:auto}
+.panel.show{transform:none}
+.panel .pimg{display:block;width:calc(100% + 4.8vw);margin:0 -2.4vw;aspect-ratio:21/9;object-fit:cover;-webkit-mask-image:linear-gradient(180deg,#000 72%,transparent);mask-image:linear-gradient(180deg,#000 72%,transparent)}
+.panel .who{font:800 clamp(64px,6.6vw,120px)/.85 var(--head);color:var(--k);margin-top:-6vh;position:relative;float:left;margin-right:1.4vw}
+.panel .tagl{font:700 clamp(28px,2.8vw,50px)/1.05 var(--head);margin:0 0 2.2vh;padding-top:.4vh;min-height:6vh}
+.panel .tagl+h4{clear:both}
+.panel h4{font:700 clamp(14px,1.15vw,20px) var(--head);letter-spacing:.24em;text-transform:uppercase;color:var(--k);margin:1.8vh 0 .5vh}
+.panel p{font-size:clamp(18px,1.6vw,28px);line-height:1.35;color:#eef2f7}
+.panel .haz{margin-top:2vh;background:rgba(255,77,61,.12);border:1px solid rgba(255,77,61,.5);border-radius:8px;padding:1.4vh 1.1vw}
+.panel .haz h4{color:var(--hazard);margin-top:0}
+.panel .rsch{margin-top:1.8vh;font-size:clamp(12px,.9vw,15px);color:var(--mute);border-top:1px solid var(--line);padding-top:1.4vh}
+.panel .rsch b{display:block;font:600 clamp(11px,.85vw,13px) var(--head);letter-spacing:.3em;text-transform:uppercase;color:var(--acc);margin-bottom:.4vh}
+
+/* 1a · drifting strip */
+#sw,#sh{padding:0;justify-content:flex-start}
+.wall.ours{animation-duration:90s}
+.wall.ours figure{border-color:rgba(34,197,94,.45)}
+.wall figure.land{aspect-ratio:16/10}
+.swTop{position:absolute;left:0;right:0;top:12vh;text-align:center;z-index:2}
+.wallWrap{position:absolute;left:0;right:0;top:31vh;bottom:12vh;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.wall{display:flex;gap:1.4vw;height:100%;width:max-content;animation:wallMove 70s linear infinite}
+@keyframes wallMove{to{transform:translateX(-50%)}}
+.wall figure{height:100%;aspect-ratio:9/15;border-radius:14px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.6);border:2px solid rgba(255,77,61,.35);flex:none;
+  opacity:0;transform:translateY(40px) scale(.96);transition:opacity .8s,transform 1s var(--ease)}
+.slide.on .wall figure{opacity:1;transform:none}
+.wall figure:nth-child(2){transition-delay:.15s}.wall figure:nth-child(3){transition-delay:.3s}.wall figure:nth-child(4){transition-delay:.45s}
+.wall figure:nth-child(5){transition-delay:.6s}.wall figure:nth-child(6){transition-delay:.75s}.wall figure:nth-child(7){transition-delay:.9s}
+.wall img,.wall video{width:100%;height:100%;object-fit:cover;display:block}
+body.three .slide:not(.on) .wall figure{opacity:1;transform:none}
+
+/* 1b · their way, our way: a wipe that sweeps between the two pictures */
+#sx{padding:0}
+.cmp{position:absolute;inset:0;--x:50%}
+.cmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cmpR{position:absolute;inset:0;clip-path:inset(0 0 0 var(--x))}
+.cmpBar{position:absolute;top:0;bottom:0;left:var(--x);width:5px;margin-left:-2px;background:var(--acc);box-shadow:0 0 30px var(--acc)}
+.cmp::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,17,34,.85) 0%,rgba(7,17,34,.1) 30%,rgba(7,17,34,.1) 60%,rgba(7,17,34,.9) 100%);pointer-events:none}
+.cmpTop{position:absolute;left:0;right:0;top:12vh;text-align:center;z-index:2}
+.cmpCol{position:absolute;bottom:12vh;width:min(30vw,560px);padding:2.2vh 1.6vw;border-radius:14px;z-index:2}
+.cmpCol.L{left:5vw;border-top:5px solid var(--hazard)}
+.cmpCol.R{right:5vw;border-top:5px solid var(--b)}
+.cmpCol b{display:block;font:700 clamp(16px,1.4vw,24px) var(--head);letter-spacing:.2em;text-transform:uppercase;margin-bottom:1vh}
+.cmpCol.L b{color:var(--hazard)}.cmpCol.R b{color:var(--b)}
+.cmpCol li{list-style:none;font-size:clamp(18px,1.55vw,27px);line-height:1.35;margin:.6vh 0;padding-left:1.4em;position:relative}
+.cmpCol.L li::before{content:"✕";position:absolute;left:0;color:var(--hazard);font-weight:700}
+.cmpCol.R li::before{content:"✓";position:absolute;left:0;color:var(--b);font-weight:700}
+
+/* 3 · attitudes */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2vw;margin-top:1.2vh}
+.card{border-radius:12px;overflow:hidden;border-top:5px solid var(--k);opacity:0;transform:translateY(40px);transition:opacity .7s,transform .8s var(--ease)}
+.card.in{opacity:1;transform:none}
+.card img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover}
+.card .tx{padding:1.5vh 1.1vw 1.9vh}
+.card .who{font:800 clamp(36px,3.4vw,60px)/.9 var(--head);color:var(--k)}
+.card q{display:block;font:700 clamp(22px,2vw,36px)/1.1 var(--head);margin:.7vh 0 1.1vh;quotes:"\201C" "\201D"}
+.card .src{font-size:clamp(15px,1.2vw,20px);color:var(--mute);line-height:1.4}
+.card .src b{color:#dbe3ee;font:600 .85em var(--head);letter-spacing:.22em;text-transform:uppercase;margin-right:.4em}
+.foot{margin-top:2vh;max-width:110ch;font-size:clamp(14px,1.12vw,18px);line-height:1.45;color:#dbe3ee;border-left:4px solid var(--acc);padding:1.1vh 1.2vw;border-radius:0 8px 8px 0}
+.foot b{color:var(--acc)}.foot span{display:block;font-size:.72em;color:var(--mute);margin-top:.4vh}
+
+/* 4 · UK */
+.uk{display:grid;grid-template-columns:repeat(3,1fr);gap:1vw;margin-top:1.2vh;max-width:1500px}
+.uk .it{padding:1.9vh 1.2vw;border-radius:12px;opacity:0;transform:translateY(30px);transition:opacity .7s,transform .8s var(--ease)}
+.slide.on .uk .it{opacity:1;transform:none}
+.slide.on .uk .it:nth-child(2){transition-delay:.12s}.slide.on .uk .it:nth-child(3){transition-delay:.24s}
+.slide.on .uk .it:nth-child(4){transition-delay:.36s}.slide.on .uk .it:nth-child(5){transition-delay:.48s}.slide.on .uk .it:nth-child(6){transition-delay:.6s}
+.uk .t{font:800 clamp(24px,2vw,36px)/1.05 var(--head);text-transform:uppercase;margin-bottom:.7vh}
+.uk .t i{font-style:normal;color:var(--acc);margin-right:.35em}
+.uk p{font-size:clamp(17px,1.4vw,25px);line-height:1.38;color:#eef2f7}
+.uk .s{display:block;margin-top:.8vh;font-size:clamp(10px,.75vw,12px);color:var(--mute)}
+.hats{display:flex;gap:1.8vw;margin-top:2vh;align-items:center;flex-wrap:wrap}
+.hat{display:flex;align-items:center;gap:.6vw;font:600 clamp(13px,1.05vw,17px) var(--head);letter-spacing:.06em;text-transform:uppercase}
+.hat svg{width:clamp(30px,2.6vw,44px);height:auto}
+
+/* 5 · respond */
+#s5 .txt{width:min(56vw,960px)}
+#s5 .pic{position:absolute;right:3vw;top:50%;width:min(31vw,560px);display:flex;flex-direction:column;gap:1.6vh;transform:translateY(-54%) translateX(40px);opacity:0;
+  transition:opacity 1.2s .4s,transform 1.4s .4s var(--ease)}
+#s5.on .pic{opacity:1;transform:translateY(-54%)}
+#s5 .pic figure{border-radius:12px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6);position:relative}
+#s5 .pic figure:nth-child(2){width:70%;align-self:flex-end;margin-top:-7vh;border:3px solid rgba(255,255,255,.14)}
+#s5 .pic video{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+#s5 .pic figcaption{position:absolute;left:0;bottom:0;right:0;padding:.9vh .9vw;font:600 clamp(10px,.8vw,13px) var(--head);letter-spacing:.22em;text-transform:uppercase;background:linear-gradient(90deg,rgba(8,19,38,.9),transparent)}
+.steps{display:flex;gap:1vw;margin:.6vh 0 2vh}
+.step{flex:1;padding:1.7vh 1vw;border-radius:12px}
+.step.photo{background:linear-gradient(180deg,rgba(8,19,38,.3),rgba(8,19,38,.92) 70%),var(--img) center 30%/cover}
+.step .n{font:800 clamp(36px,3.6vw,62px)/.85 var(--head);color:var(--acc)}
+.step .w{font:800 clamp(21px,1.8vw,31px) var(--head);text-transform:uppercase;letter-spacing:.04em;margin:.4vh 0 .5vh}
+.step p{font-size:clamp(16px,1.3vw,22px);color:#c9d3df;line-height:1.4}
+.briefs{display:grid;grid-template-columns:1fr;gap:1.6vw}
+.brief{border-left:4px solid var(--acc);padding:.4vh 0 .4vh 1.1vw}
+.brief .kicker{display:block;margin-bottom:.8vh}
+.brief li{list-style:none;font-size:clamp(18px,1.55vw,27px);line-height:1.35;margin:.7vh 0;padding-left:1.4em;position:relative}
+.brief li::before{content:"";position:absolute;left:0;top:.42em;width:.6em;height:.6em;background:var(--acc);transform:rotate(45deg)}
+.reg{margin-top:2vh;font-size:clamp(11px,.85vw,13px);color:var(--mute)}
+
+/* 6 · close */
+#s6 .close{display:flex;flex-direction:column;gap:1vh}
+#s6 .cl{font:800 clamp(64px,7.4vw,140px)/.95 var(--head);text-transform:uppercase;text-shadow:0 4px 40px rgba(0,0,0,.5)}
+#s6 .cl.hl{color:var(--acc)}
+#s6 .mini{position:absolute;right:4vw;top:9vh;width:min(30vw,540px);aspect-ratio:10/7}
+#s6 .ty{margin-top:4vh;font:600 clamp(16px,1.5vw,24px) var(--head);letter-spacing:.4em;text-transform:uppercase;color:var(--mute)}
+
+
+
+.qs{display:flex;flex-direction:column;gap:1.5vh;margin-top:2vh;text-align:left;width:min(1100px,90vw)}
+.q{display:flex;align-items:center;gap:1.4vw;padding:1.4vh 1.6vw;border-radius:14px;opacity:0;transform:translateX(-30px);transition:opacity .7s,transform .8s var(--ease)}
+.q.in{opacity:1;transform:none}
+.q .n{flex:none;width:clamp(46px,4vw,66px);height:clamp(46px,4vw,66px);border:2.5px solid var(--acc);border-radius:50%;display:grid;place-items:center;font:800 clamp(22px,2.1vw,34px) var(--head);color:var(--acc)}
+.q p{font:600 clamp(22px,2.3vw,38px)/1.15 var(--head)}
+
+/* ---------- presenter controls ---------- */
+#logo{position:fixed;top:3vh;left:3vw;z-index:6;filter:drop-shadow(0 4px 18px rgba(0,0,0,.5))}
+#logo svg{display:block;height:clamp(56px,9vh,96px);width:auto}
+#ctl{position:fixed;left:50%;bottom:2.2vh;transform:translateX(-50%);z-index:7;display:flex;align-items:center;gap:.5vw;padding:.7vh .7vw;border-radius:999px}
+#ctl button,#ctl a{display:grid;place-items:center;text-decoration:none;border:1px solid rgba(143,180,227,.25);background:rgba(255,255,255,.04);border-radius:999px;cursor:pointer;
+  height:clamp(40px,5.2vh,56px);min-width:clamp(40px,5.2vh,56px);padding:0 1vw;font:700 clamp(17px,1.45vw,24px) var(--head);letter-spacing:.06em;transition:background .25s,transform .15s,border-color .25s}
+#ctl button:hover,#ctl a:hover{background:rgba(255,255,255,.12)}
+#ctl button:active{transform:scale(.94)}
+#ctl .w{color:var(--k);border-color:color-mix(in srgb,var(--k) 60%,transparent);min-width:clamp(48px,6vh,64px)}
+#ctl .w.on{background:var(--k);color:#fff;border-color:var(--k)}
+#ctl .sep{width:1px;height:3.4vh;background:rgba(143,180,227,.25);margin:0 .3vw}
+#ctl .dots{display:flex;gap:.5vw;padding:0 .5vw}
+#ctl .dots i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer;transition:background .3s,transform .3s}
+#ctl .dots i.on{background:var(--acc);transform:scale(1.35)}
+#ctl .small{font-size:clamp(12px,.9vw,14px)!important;letter-spacing:.2em!important;color:var(--mute)}
+#notes{position:fixed;left:50%;bottom:11vh;transform:translateX(-50%) translateY(170%);width:min(900px,92vw);z-index:8;
+  background:rgba(9,22,44,.97);border:1px solid var(--line);border-left:4px solid var(--acc);padding:16px 20px;
+  font-size:15px;line-height:1.5;color:#dfe6ef;transition:transform .35s ease;border-radius:8px}
+#notes.show{transform:translateX(-50%) translateY(0)}
+#notes b{font:600 12px var(--head);letter-spacing:.2em;color:var(--acc);display:block;margin-bottom:4px}
+#bar{position:fixed;left:0;bottom:0;height:3px;background:var(--acc);transition:width .6s ease;z-index:7}
+
+/* ---------- 3D version: every chapter hangs on a ring in space; the camera swings between them ---------- */
+#cam{position:fixed;inset:0;z-index:2;perspective:1900px;perspective-origin:50% 45%;pointer-events:none}
+#world{position:absolute;inset:0;transform-style:preserve-3d}
+body.three .slide{visibility:visible;opacity:.5;backface-visibility:hidden;border-radius:28px;
+  background:rgba(8,19,38,.62);border:1px solid rgba(143,180,227,.28);box-shadow:0 40px 140px rgba(0,0,0,.6);transition:opacity 1.2s,background .9s,border-color .9s}
+body.three .slide.on{opacity:1;background:rgba(8,19,38,0);border-color:transparent;box-shadow:none}
+body.three .slide:not(.on) .rise,body.three .slide:not(.on) [data-step],body.three .slide:not(.on) .ipanel,
+body.three .slide:not(.on) .il,body.three .slide:not(.on) .dots4,body.three .slide:not(.on) .uk .it,body.three .slide:not(.on) .pic{opacity:1!important;transform:none!important}
+body.three .glass{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(9,22,44,.82)}
+body.three .bd::after{background:rgba(5,12,26,.82)!important}
+body.three #s2 .caption{z-index:3}
+
+/* ---------- animated words ---------- */
+.w{display:inline-block;white-space:pre;opacity:0}
+@keyframes wIn{from{opacity:0;transform:translateY(.55em) scale(.92);filter:blur(8px)}60%{opacity:1;filter:blur(0)}to{opacity:1;transform:none;filter:none}}
+.slide.on .w,.panel.show .w{animation:wIn .75s var(--ease) both;animation-delay:calc(var(--i) * 75ms + var(--wb,.15s))}
+#s1:not(.ready) .w{animation:none!important;opacity:0}
+.il,.dots4{opacity:1!important;transform:none!important}
+.dots4 i{animation:none}
+#s1.ready .dots4 i{animation:wIn .6s var(--ease) both}
+#s1.ready .dots4 i:nth-child(1){animation-delay:2.4s}#s1.ready .dots4 i:nth-child(2){animation-delay:2.55s}#s1.ready .dots4 i:nth-child(3){animation-delay:2.7s}#s1.ready .dots4 i:nth-child(4){animation-delay:2.85s}
+body.three .slide:not(.on) .w{animation:none;opacity:1}
+
+@media (max-width:760px){
+  .cards,.uk{grid-template-columns:1fr 1fr}#s1 .mini{display:none}
+  #s5 .txt{width:100%}#s5 .pic{display:none}.briefs{grid-template-columns:1fr}.steps{flex-direction:column}
+  .slide{padding:12vh 16px 14vh}.panel{width:92vw}#ctl .dots,#ctl .small{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- backdrops: real footage behind every chapter -->
+<div class="bd" id="bd-s1" data-show="meet5,meet7,meet1,meet4,meet6,meet8,meet3,meet2" style="--shade:linear-gradient(90deg,rgba(7,17,34,.75),rgba(7,17,34,.35) 55%,rgba(7,17,34,.6))"></div>
+<div class="bd" id="bd-s2" style="--shade:radial-gradient(ellipse at 50% 50%,rgba(7,17,34,.82),rgba(7,17,34,.96))"><img src="img/meet7.jpg" alt=""></div>
+<div class="bd" id="bd-s3" style="--shade:linear-gradient(180deg,rgba(7,17,34,.86),rgba(7,17,34,.95))"><img src="img/meet3.jpg" alt=""></div>
+<div class="bd" id="bd-s4" style="--shade:linear-gradient(90deg,rgba(7,17,34,.95),rgba(7,17,34,.82) 60%,rgba(7,17,34,.7))"><img src="img/prevent.jpg" alt=""></div>
+<div class="bd" id="bd-s5" style="--shade:linear-gradient(90deg,rgba(7,17,34,.96),rgba(7,17,34,.85) 55%,rgba(7,17,34,.6))"><img src="img/ours1.jpg" alt=""></div>
+<div class="bd" id="bd-s6" data-show="meet1,meet5,meet7,meet4,meet6,meet8,meet3,meet2" style="--shade:linear-gradient(180deg,rgba(7,17,34,.5),rgba(7,17,34,.86))"></div>
+<canvas id="gl"></canvas>
+
+<!-- the whiteboard box, as drawn in the meeting: a plain cuboid, HAZARD inside, four risk arrows -->
+<template id="boxT">
+<svg viewBox="0 0 1000 700" aria-label="Hazard box with four risk arrows">
+  <polygon class="face" data-face="A" points="330,300 600,300 710,230 440,230" style="--k:var(--a)"/>
+  <polygon class="face" data-face="B" points="330,500 600,500 710,430 440,430" style="--k:var(--b)"/>
+  <polygon class="face" data-face="C" points="330,300 440,230 440,430 330,500" style="--k:var(--c)"/>
+  <polygon class="face" data-face="D" points="600,300 710,230 710,430 600,500" style="--k:var(--d)"/>
+  <g class="lines">
+    <path class="edge hidden" d="M440,230 L440,430 L710,430 M440,430 L330,500"/>
+    <path class="edge" style="--len:940" d="M330,300 L600,300 L600,500 L330,500 Z"/>
+    <path class="edge" style="--len:900" d="M330,300 L440,230 L710,230 L600,300 M710,230 L710,430 L600,500"/>
+  </g>
+  <g class="lbl"><text class="hz" x="465" y="402" text-anchor="middle">HAZARD</text>
+  <text class="hzs" x="465" y="440" text-anchor="middle">WORKING AT HEIGHT</text></g>
+  <g class="arm" data-k="A" style="--k:var(--a)">
+    <text class="who" x="520" y="58" text-anchor="middle">A</text><text class="risk" x="520" y="92" text-anchor="middle">RISK</text>
+    <line class="shaft" x1="520" y1="112" x2="520" y2="232"/><polygon class="head" points="505,230 535,230 520,258"/>
+    <circle class="run" r="5" cx="520" cy="114"><animate attributeName="cy" values="114;228" dur="1.5s" repeatCount="indefinite"/></circle></g>
+  <g class="arm" data-k="B" style="--k:var(--b)">
+    <line class="shaft" x1="520" y1="596" x2="520" y2="482"/><polygon class="head" points="505,484 535,484 520,456"/>
+    <circle class="run" r="5" cx="520" cy="594"><animate attributeName="cy" values="594;486" dur="1.5s" repeatCount="indefinite"/></circle>
+    <text class="who" x="520" y="674" text-anchor="middle">B</text><text class="risk" x="520" y="704" text-anchor="middle">RISK</text></g>
+  <g class="arm" data-k="C" style="--k:var(--c)">
+    <text class="who" x="70" y="392" text-anchor="middle">C</text><text class="risk" x="70" y="424" text-anchor="middle">RISK</text>
+    <line class="shaft" x1="132" y1="375" x2="350" y2="375"/><polygon class="head" points="348,360 348,390 376,375"/>
+    <circle class="run" r="5" cx="134" cy="375"><animate attributeName="cx" values="134;344" dur="1.5s" repeatCount="indefinite"/></circle></g>
+  <g class="arm" data-k="D" style="--k:var(--d)">
+    <line class="shaft" x1="878" y1="362" x2="684" y2="362"/><polygon class="head" points="686,347 686,377 658,362"/>
+    <circle class="run" r="5" cx="876" cy="362"><animate attributeName="cx" values="876;690" dur="1.5s" repeatCount="indefinite"/></circle>
+    <text class="who" x="935" y="380" text-anchor="middle">D</text><text class="risk" x="935" y="412" text-anchor="middle">RISK</text></g>
+</svg>
+</template>
+
+<!-- 1 · Title -->
+<section class="slide" id="s1">
+  <span class="kicker rise">Safe working at height</span>
+  <h1 class="rise d1"><span>Same hazard,</span><span class="hl">different risk</span><span>perceptions</span></h1>
+  <aside class="ipanel glass">
+    <p class="il" style="--dl:.2s">Four workers.</p>
+    <p class="il" style="--dl:.7s">One hazard.</p>
+    <p class="il big" style="--dl:1.2s">Each sees a <em>different risk.</em></p>
+    <div class="dots4" style="--dl:1.8s"><i style="--k:var(--a)">A</i><i style="--k:var(--b)">B</i><i style="--k:var(--c)">C</i><i style="--k:var(--d)">D</i></div>
+  </aside>
+</section>
+
+<!-- 1a · Somewhere, this is normal: a drifting strip of how the job is done elsewhere -->
+<section class="slide" id="sw">
+  <div class="swTop"><span class="kicker rise">The same job, somewhere else</span>
+    <h2 class="rise d1">Somewhere, this is normal.</h2></div>
+  <div class="wallWrap"><div class="wall"><figure><video src="img/abroadv1.mp4" muted loop playsinline preload="auto"></video></figure><figure><img src="img/abroad1.jpg" alt=""></figure><figure><video src="img/abroadv2.mp4" muted loop playsinline preload="auto"></video></figure><figure><img src="img/abroad2.jpg" alt=""></figure><figure><video src="img/abroadv3.mp4" muted loop playsinline preload="auto"></video></figure><figure><img src="img/abroad3.jpg" alt=""></figure><figure><img src="img/abroad4.jpg" alt=""></figure><figure><video src="img/abroadv1.mp4" muted loop playsinline preload="auto"></video></figure><figure><img src="img/abroad1.jpg" alt=""></figure><figure><video src="img/abroadv2.mp4" muted loop playsinline preload="auto"></video></figure><figure><img src="img/abroad2.jpg" alt=""></figure><figure><video src="img/abroadv3.mp4" muted loop playsinline preload="auto"></video></figure><figure><img src="img/abroad3.jpg" alt=""></figure><figure><img src="img/abroad4.jpg" alt=""></figure></div></div>
+</section>
+
+<!-- 1a2 · Here, this is how we do it: the same kind of strip, our own site -->
+<section class="slide" id="sh">
+  <div class="swTop"><span class="kicker rise">Our site · lifting and access</span>
+    <h2 class="rise d1">Here, this is how we do it.</h2></div>
+  <div class="wallWrap"><div class="wall ours"><figure><video src="img/oursv1.mp4" muted loop playsinline preload="auto"></video></figure><figure class="land"><img src="img/ours3.jpg" alt=""></figure><figure><video src="img/oursv2.mp4" muted loop playsinline preload="auto"></video></figure><figure class="land"><img src="img/ours2.jpg" alt=""></figure><figure><video src="img/oursv3.mp4" muted loop playsinline preload="auto"></video></figure><figure class="land"><img src="img/ours10.jpg" alt=""></figure><figure class="land"><img src="img/ours1.jpg" alt=""></figure><figure class="land"><img src="img/ours6.jpg" alt=""></figure><figure class="land"><img src="img/ours5.jpg" alt=""></figure><figure><video src="img/oursv1.mp4" muted loop playsinline preload="auto"></video></figure><figure class="land"><img src="img/ours3.jpg" alt=""></figure><figure><video src="img/oursv2.mp4" muted loop playsinline preload="auto"></video></figure><figure class="land"><img src="img/ours2.jpg" alt=""></figure><figure><video src="img/oursv3.mp4" muted loop playsinline preload="auto"></video></figure><figure class="land"><img src="img/ours10.jpg" alt=""></figure><figure class="land"><img src="img/ours1.jpg" alt=""></figure><figure class="land"><img src="img/ours6.jpg" alt=""></figure><figure class="land"><img src="img/ours5.jpg" alt=""></figure></div></div>
+</section>
+
+<!-- 1b · Their way, our way: same height, two very different normals -->
+<section class="slide" id="sx" data-steps="1">
+  <div class="cmp">
+    <img class="cmpL" src="img/unsafe-site.jpg" alt="Workers at height on bamboo scaffolding with no edge protection">
+    <div class="cmpR"><img src="img/ours3.jpg" alt="Our banksman signalling a panel lift" style="object-position:70% 50%"></div>
+    <i class="cmpBar"></i>
+  </div>
+  <div class="cmpTop"><span class="kicker rise">Same height · two different normals</span>
+    <h2 class="rise d1">How they work. How we work.</h2></div>
+  <div class="cmpCol L glass rise d2"><b>Where some of us learned</b>
+    <ul><li>No edge protection</li><li>No harness, nothing to clip to</li><li>Planks and bamboo as the platform</li><li>Sandals, no hard hat</li></ul></div>
+  <div class="cmpCol R glass rise d3"><b>Here, on our sites</b>
+    <ul><li>Guardrails and netting at every edge</li><li>Harness clipped to a proper anchor</li><li>Hard hat with the chin strap done up</li><li>Boots, gloves, full hi-vis</li></ul></div>
+</section>
+
+<!-- 2 · The model -->
+<section class="slide" id="s2" data-steps="5">
+  <div class="top"><span class="kicker rise">The model</span><h2 class="rise d1">One hazard, different perceptions</h2></div>
+  <div class="stage box draw" data-box="model"></div>
+  <p class="caption glass">Each colour is a different worker,
+    <b style="color:var(--a)">A</b> to <b style="color:var(--d)">D</b>. They all face the same hazard, but each sees a different level of risk, shaped by the safety culture they grew up in.</p>
+</section>
+<aside class="panel" id="panel"><div id="pbody"></div></aside>
+<template id="pA"><img class="pimg" src="img/workerA.jpg" alt=""><div class="who">A</div><div class="tagl">“It’s just how the job is done.”</div>
+  <h4>Where they learned the job</h4><p>Sites where open edges, timber planks and no guardrails were normal, and nobody wore a harness.</p>
+  <h4>What they do at height</h4><p>Wears the harness but leaves the lanyard unclipped, with the anchor sitting right there. Works at the open edge.</p>
+  <div class="haz"><h4>The hazard they create</h4><p>A fall from height. And new starters watching them learn that this is how it’s done here too.</p></div></template>
+<template id="pB"><img class="pimg" src="img/workerB.jpg" alt=""><div class="who">B</div><div class="tagl">“If the rule says harness, I wear it.”</div>
+  <h4>Where they learned the job</h4><p>Strict enforcement, permits, inspections and training. The rules are followed to the letter.</p>
+  <h4>What they do at height</h4><p>Clips on and follows the RAMS exactly. But when conditions change and the rule doesn’t cover it, carries on because it was signed off.</p>
+  <div class="haz"><h4>The hazard they create</h4><p>Trusting the paperwork over the edge in front of them: a missing guardrail, an unchecked anchor point, a damaged lanyard.</p></div></template>
+<template id="pC"><img class="pimg" src="img/workerC.jpg" alt=""><div class="who">C</div><div class="tagl">“The company will keep me safe.”</div>
+  <h4>Where they learned the job</h4><p>Safety was the employer’s job. Workers did what they were told and did not question it.</p>
+  <h4>What they do at height</h4><p>Waits to be told. Sees the torn netting or the missing rail, says nothing, works around it.</p>
+  <div class="haz"><h4>The hazard they create</h4><p>Defects nobody reports. The hazard stays there for the next person, who may not see it.</p></div></template>
+<template id="pD"><img class="pimg" src="img/workerD.jpg" alt=""><div class="who">D</div><div class="tagl">“Ten years and I’ve never fallen.”</div>
+  <h4>Where they learned the job</h4><p>Experience counted for more than procedure. The skilled ones didn’t need a harness.</p>
+  <h4>What they do at height</h4><p>Leaves the harness off for a “quick five-minute job” and goes past the edge protection instead of moving the kit.</p>
+  <div class="haz"><h4>The hazard they create</h4><p>Short, routine jobs are exactly where falls happen. Younger workers copy the experienced ones.</p></div></template>
+
+<!-- 3 · Attitudes -->
+<section class="slide" id="s3" data-steps="4">
+  <span class="kicker rise">Same hazard · four mindsets</span>
+  <h2 class="rise d1">Where the attitudes come from</h2>
+  <div class="cards">
+    <div class="card glass" data-step="1" style="--k:var(--a)"><img src="img/workerA.jpg" alt=""><div class="tx"><div class="who">A</div><q>It’s just how the job is done.</q><div class="src"><b>Shaped by</b>a site culture where risk is normal</div></div></div>
+    <div class="card glass" data-step="2" style="--k:var(--b)"><img src="img/workerB.jpg" alt=""><div class="tx"><div class="who">B</div><q>If the rule says harness, I wear it.</q><div class="src"><b>Shaped by</b>strict enforcement and training</div></div></div>
+    <div class="card glass" data-step="3" style="--k:var(--c)"><img src="img/workerC.jpg" alt=""><div class="tx"><div class="who">C</div><q>The company will keep me safe.</q><div class="src"><b>Shaped by</b>safety seen as the employer’s job</div></div></div>
+    <div class="card glass" data-step="4" style="--k:var(--d)"><img src="img/workerD.jpg" alt=""><div class="tx"><div class="who">D</div><q>Ten years and I’ve never fallen.</q><div class="src"><b>Shaped by</b>experience valued over procedure</div></div></div>
+  </div>
+</section>
+
+<!-- 4 · How it works in the UK -->
+<section class="slide" id="s4">
+  <span class="kicker rise">New to UK sites?</span>
+  <h2 class="rise d1">How it works here</h2>
+  <div class="uk">
+    <div class="it glass"><div class="t"><i>01</i>You have your own legal duty</div><p>Every worker must take reasonable care of themselves and anyone their work affects, and co-operate with the employer.</p></div>
+    <div class="it glass"><div class="t"><i>02</i>Any height counts</div><p>Work at height is anywhere you could fall far enough to get hurt. There is no safe minimum height.</p></div>
+    <div class="it glass"><div class="t"><i>03</i>Avoid · prevent · minimise</div><p>Avoid working at height if you can. If not, prevent the fall. If a fall is still possible, minimise how far and how badly.</p></div>
+    <div class="it glass"><div class="t"><i>04</i>Every roof is fragile</div><p>Treat every roof as fragile until a competent person confirms it is not. Almost one in five construction deaths involve roof work.</p></div>
+    <div class="it glass"><div class="t"><i>05</i>Induction before you start</div><p>The principal contractor must give you a suitable site induction before you start work.</p></div>
+    <div class="it glass"><div class="t"><i>06</i>Speak up, you’re protected</div><p>Report risks to whoever controls the work. The law protects you for raising a genuine safety concern.</p></div>
+  </div>
+</section>
+
+<!-- 5 · Respond -->
+<section class="slide" id="s5">
+  <div class="txt">
+    <span class="kicker rise">One standard for everyone</span>
+    <h2 class="rise d1">How we respond on site</h2>
+    <div class="steps rise d2">
+      <div class="step glass"><div class="n">1</div><div class="w">Avoid</div><p>Do the work from the ground where we can.</p></div>
+      <div class="step glass photo" style="--img:url(img/prevent.jpg)"><div class="n">2</div><div class="w">Prevent</div><p>Edge protection, platforms, or a harness clipped to a proper anchor.</p></div>
+      <div class="step glass"><div class="n">3</div><div class="w">Minimise</div><p>Limit how far, and how badly, someone can fall.</p></div>
+    </div>
+    <div class="briefs rise d3">
+      <div class="brief"><span class="kicker">At every briefing</span><ul>
+        <li>Brief against the RAMS, not habit</li>
+        <li>Check understanding, not just a signature</li>
+        <li>Anyone can stop the job, whatever their background</li></ul></div>
+    </div>
+    <p class="reg rise d4">Based on the Work at Height Regulations 2005</p>
+  </div>
+  <div class="pic">
+    <figure><img src="img/meet2.jpg" alt="MAC morning briefing" style="display:block;width:100%;aspect-ratio:16/9;object-fit:cover;object-position:50% 40%"><figcaption>Our morning briefing</figcaption></figure>
+    <figure><video src="img/oursv3.mp4" muted loop playsinline preload="auto" style="object-position:50% 35%"></video><figcaption>Lifting the panels</figcaption></figure>
+  </div>
+</section>
+
+<!-- 6 · Close -->
+<section class="slide" id="s6">
+  <div class="close">
+    <p class="cl rise">Same hazard.</p>
+    <p class="cl rise d1">One standard.</p>
+    <p class="cl hl rise d2">Everyone goes home safe.</p>
+  </div>
+  <div class="mini box rise d3" data-box="lit"></div>
+  <p class="ty rise d4">Thank you</p>
+</section>
+
+<div id="logo"><svg viewBox="0 0 560 300" role="img" aria-label="MAC Roofing &amp; Contracting Ltd">
+  <polygon points="8,214 280,10 552,214" fill="#b0b0b0"/>
+  <polygon points="280,118 214,168 346,168" fill="#0b1a33" opacity=".9"/>
+  <text x="280" y="214" text-anchor="middle" font-family="Michroma, 'Arial Black', sans-serif" font-size="104" fill="#fff" letter-spacing="2">MAC</text>
+  <text x="280" y="258" text-anchor="middle" font-family="Michroma, Arial, sans-serif" font-size="19" fill="#fff" letter-spacing="3">ROOFING &amp; CONTRACTING</text>
+  <text x="280" y="292" text-anchor="middle" font-family="Michroma, Arial, sans-serif" font-size="19" fill="#fff" letter-spacing="3">LIMITED</text>
+</svg></div>
+
+<nav id="ctl" class="glass" aria-label="Presenter controls">
+  <button id="prev" title="Back (← or clicker back)">‹</button>
+  <span class="dots" id="dots"></span>
+  <span class="sep"></span>
+  <button class="w" data-w="A" style="--k:var(--a)" title="Worker A (key A)">A</button>
+  <button class="w" data-w="B" style="--k:var(--b)" title="Worker B (key B)">B</button>
+  <button class="w" data-w="C" style="--k:var(--c)" title="Worker C (key C)">C</button>
+  <button class="w" data-w="D" style="--k:var(--d)" title="Worker D (key D)">D</button>
+  <span class="sep"></span>
+  <button id="next" title="Next (→, space or clicker)">›</button>
+</nav>
+<div id="bar"></div>
+
+<script>
+const IS3D=document.documentElement.dataset.mode==='3d';
+if(IS3D)document.body.classList.add('three');
+
+// photo backdrops that cycle slowly (our own morning briefings)
+document.querySelectorAll('.bd[data-show]').forEach(bd=>{
+  const imgs=bd.dataset.show.split(',').map((n,k)=>{const im=document.createElement('img');im.src='img/'+n+'.jpg';im.alt='';im.style.cssText='opacity:'+(k?0:1)+';transition:opacity 1.6s ease';bd.appendChild(im);return im;});
+  let k=0;setInterval(()=>{if(!bd.classList.contains('on'))return;imgs[k].style.opacity=0;k=(k+1)%imgs.length;imgs[k].style.opacity=1;},6000);
+});
+// split text into words so they can animate in one by one (keeps colours and line breaks)
+function splitWords(el,base){
+  let n=0;const walk=node=>{[...node.childNodes].forEach(c=>{
+    if(c.nodeType===3){const parts=c.textContent.split(/(\s+)/);const frag=document.createDocumentFragment();
+      parts.forEach(t=>{if(!t)return;if(/^\s+$/.test(t)){frag.appendChild(document.createTextNode(t));return;}
+        const w=document.createElement('span');w.className='w';w.textContent=t;w.style.setProperty('--i',n++);w.style.setProperty('--wb',base);frag.appendChild(w);});
+      c.replaceWith(frag);}
+    else if(c.nodeType===1&&!c.classList.contains('n'))walk(c);});};walk(el);
+}
+document.querySelectorAll('#s1 h1').forEach(e=>splitWords(e,'.25s'));
+document.querySelectorAll('#s1 .il').forEach((e,k)=>splitWords(e,(0.9+k*0.55)+'s'));
+document.querySelectorAll('.slide h2').forEach(e=>splitWords(e,'.2s'));
+document.querySelectorAll('.cmpCol li').forEach((e,k)=>splitWords(e,(0.9+(k%4)*0.25+(k>3?0.5:0))+'s'));
+document.querySelectorAll('.card q,.q p,.uk .t').forEach(e=>splitWords(e,'.35s'));
+document.querySelectorAll('#s6 .cl').forEach((e,k)=>splitWords(e,(0.2+k*0.7)+'s'));
+['pA','pB','pC','pD'].forEach(id=>{const t=document.getElementById(id);t.content.querySelectorAll('.tagl').forEach(e=>splitWords(e,'.45s'));});
+// stamp the whiteboard box into each slot
+const boxT=document.getElementById('boxT');
+document.querySelectorAll('[data-box]').forEach(el=>{
+  el.appendChild(boxT.content.cloneNode(true));
+  if(el.dataset.box==='lit'){el.querySelectorAll('.arm').forEach(a=>a.classList.add('in'));el.querySelectorAll('.face').forEach(f=>f.classList.add('lit'));}
+});
+const model=document.querySelector('#s2 .stage');
+
+const slides=[...document.querySelectorAll('.slide')];
+const ORDER='ABCD';
+let i=0,step=0;
+const total=s=>+(s.dataset.steps||0);
+const panel=document.getElementById('panel'),dots=document.getElementById('dots');
+slides.forEach((s,n)=>{const d=document.createElement('i');d.title='Chapter '+(n+1);d.onclick=()=>go(n,0);dots.appendChild(d);});
+
+// model steps: 1-4 arrows arrive, 5 caption, 6-9 one worker each, 10 everyone together
+function workerAt(){return slides[i].id==='s2'&&step>=1&&step<=4?ORDER[step-1]:null;}
+
+function render(){
+  const s=slides[i],w=workerAt();
+  slides.forEach((x,n)=>x.classList.toggle('on',n===i));
+  document.querySelectorAll('.bd').forEach(b=>b.classList.toggle('on',b.id==='bd-'+s.id));
+  s.querySelectorAll('[data-step]').forEach(el=>el.classList.toggle('in',+el.dataset.step<=step));
+  model.querySelectorAll('.arm').forEach(a=>{const k=a.dataset.k;a.classList.toggle('in',s.id==='s2');a.classList.toggle('dim',!!w&&w!==k);});
+  model.querySelectorAll('.face').forEach(f=>{const k=f.dataset.face;f.classList.toggle('lit',s.id==='s2'&&(!w||w===k));f.classList.toggle('hot',w===k);});
+  document.body.classList.toggle('worker',!!w);
+  if(w){panel.style.setProperty('--k','var(--'+w.toLowerCase()+')');document.getElementById('pbody').innerHTML=document.getElementById('p'+w).innerHTML;panel.classList.add('show');}
+  else panel.classList.remove('show');
+  document.querySelectorAll('#ctl .w').forEach(b=>b.classList.toggle('on',b.dataset.w===w));
+  [...dots.children].forEach((d,n)=>d.classList.toggle('on',n===i));
+  document.getElementById('bar').style.width=((i+1)/slides.length*100)+'%';
+  document.querySelectorAll('video').forEach(v=>{if(v.closest('#bd-s1')||v.closest('#panel'))return;
+    const on=v.closest('.slide')===s||(v.closest('.bd')&&v.closest('.bd').id==='bd-'+s.id);on?v.play().catch(()=>{}):v.pause();});
+  if(fly3d&&render.last!==i){fly3d(i);render.last=i;}
+  if(render.lastS!==i+':'+step){render.lastS=i+':'+step;onCmp(s);}
+  window.deckState={id:s.id,step,worker:w};if(window.onDeck)window.onDeck(window.deckState);
+  try{history.replaceState(null,'','#'+(i+1))}catch(e){}
+}
+// comparison wipe
+const cmp=document.querySelector('.cmp');let cmpT=null;
+function wipe(to,dur){cancelAnimationFrame(cmpT);const from=parseFloat(getComputedStyle(cmp).getPropertyValue('--x'))||50,t0=performance.now();
+  (function f(now){const t=Math.min(1,(now-t0)/dur),e=t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;cmp.style.setProperty('--x',(from+(to-from)*e)+'%');if(t<1)cmpT=requestAnimationFrame(f);})(t0);}
+function onCmp(s){if(s.id!=='sx')return;if(step===0){cmp.style.setProperty('--x','100%');setTimeout(()=>wipe(0,2200),500);setTimeout(()=>wipe(50,1400),3100);}else wipe(12,1200);}
+function go(n,st){i=Math.max(0,Math.min(slides.length-1,n));step=st||0;render();}
+function next(){if(step<total(slides[i]))step++;else if(i<slides.length-1){i++;step=0;}render();}
+function prev(){if(step>0)step--;else if(i>0){i--;step=total(slides[i]);}render();}
+// a worker button (or key) jumps straight to that worker on the model, from anywhere
+function worker(k){const n=slides.findIndex(s=>s.id==='s2');if(workerAt()===k){go(n,5);return;}go(n,1+ORDER.indexOf(k));}
+window.deck={worker,go};
+
+document.addEventListener('keydown',e=>{
+  const k=e.key;
+  if(['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(k)){e.preventDefault();next();}
+  else if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(k)){e.preventDefault();prev();}
+  else if(k==='Escape'){if(workerAt())go(i,5);}
+  else if(k==='Home')go(0,0);else if(k==='End')go(slides.length-1,0);
+  else if(/^[abcd]$/i.test(k))worker(k.toUpperCase());
+  else if(/^f$/i.test(k))fullscreen();
+});
+function fullscreen(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{});}
+document.getElementById('next').onclick=next;
+document.getElementById('prev').onclick=prev;
+document.querySelectorAll('#ctl .w').forEach(b=>b.onclick=()=>worker(b.dataset.w));
+model.querySelectorAll('.arm').forEach(a=>a.addEventListener('click',()=>{if(a.classList.contains('in'))worker(a.dataset.k);}));
+
+// 3D: hang every chapter on a ring and fly the camera round it
+let fly3d=null;
+if(IS3D){
+  const cam=document.createElement('div'),world=document.createElement('div');cam.id='cam';world.id='world';cam.appendChild(world);
+  document.body.insertBefore(cam,slides[0]);slides.forEach(sl=>world.appendChild(sl));
+  const STEP=42;let R=innerWidth*1.55,ang=0,anim=null;
+  const place=()=>{R=innerWidth*1.55;slides.forEach((sl,k)=>sl.style.transform=`rotateY(${k*STEP}deg) translateZ(${R}px)`);};
+  const set=(a,pull,tilt)=>world.style.transform=`translateZ(${-R-pull}px) rotateX(${tilt}deg) rotateY(${-a}deg)`;
+  place();addEventListener('resize',()=>{place();set(ang,0,0);});
+  const ez=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+  fly3d=(k,instant)=>{const from=ang,to=k*STEP;if(anim)cancelAnimationFrame(anim);
+    if(instant||from===to){ang=to;set(ang,0,0);return;}
+    const t0=performance.now(),dur=1700,far=Math.min(1,Math.abs(to-from)/STEP);
+    (function f(now){const t=Math.min(1,(now-t0)/dur),e=ez(t),arc=Math.sin(Math.PI*t);
+      ang=from+(to-from)*e;set(ang,arc*R*.55*Math.sqrt(far),arc*-6);if(t<1)anim=requestAnimationFrame(f);})(t0);};
+}
+const h=parseInt(location.hash.slice(1));if(h>0&&h<=slides.length)i=h-1;
+if(fly3d)fly3d(i,true);
+render();
+
+document.getElementById('s1').classList.add('ready');
+</script>
+</body>
+</html>
